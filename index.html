@@ -1,8 +1,29 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <script type="module" src="script.mjs"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="module" src="./script.mjs" defer></script>
+    <title>Spell Checker</title>
   </head>
   <body>
+    <main>
+      <h1>Spell Checker</h1>
+
+      <p>
+        Dictionary size:
+        <strong id="dictSize">...</strong>
+      </p>
+
+      <label for="textInput">Write your text:</label>
+      <textarea id="textInput" rows="6" cols="60"></textarea>
+
+      <div>
+        <button id="checkBtn" type="button">Check spelling</button>
+      </div>
+
+      <div id="results" aria-live="polite"></div>
+    </main>
+
   </body>
 </html>
