@@ -1,11 +1,67 @@
-// This is a placeholder file which shows how you can access JSON data defined in other files.
-// It can be loaded into index.html.
-// You can delete the contents of the file once you have understood how it works.
-// Note that when running locally, in order to open a web page which uses modules, you must serve the directory over HTTP e.g. with https://www.npmjs.com/package/http-server
-// You can't open the index.html file using a file:// URL.
+import { getDictionarySize } from "./common.mjs";
+import words from "./words.json" with { type: "json" };
+import { buildDictionary, findMisspellings } from "./spellcheck.mjs";
 
-import getDictionarySize from "./common.mjs";
+const wordSize = document.getElementById("dictSize");
+const textInput = document.getElementById("textInput");
+const resultsDiv = document.getElementById("results");
+const checkBtn = document.getElementById("checkBtn");
 
-window.onload = function() {
-    document.querySelector("body").innerText = `There are ${getDictionarySize()} words in the Basic English dictionary`;
+const dictionary = buildDictionary(words);
+const userDictionary = new Set();
+
+window.onload = function () {
+  wordSize.textContent = getDictionarySize();
+};
+
+textInput.addEventListener("input", () => {
+  resultsDiv.innerHTML = "";
+});
+
+checkBtn.addEventListener("click", () => {
+  const mistakes = findMisspellings(textInput.value, dictionary, userDictionary);
+  showResults(mistakes);
+});
+
+function showResults(mistakes) {
+  resultsDiv.innerHTML = "";
+
+  if (mistakes.length === 0) return;
+
+  const message = document.createElement("p");
+  message.textContent = "These words are not in Basic English:";
+  message.style.fontWeight = "600";
+
+  const ul = document.createElement("ul");
+
+  for (let i = 0; i < mistakes.length; i++) {
+    const word = mistakes[i];
+
+    const li = document.createElement("li");
+
+    const span = document.createElement("span");
+    span.textContent = word;
+    span.style.background = "yellow";
+    span.style.display = "inline-block";
+    span.style.padding = "2px 6px";
+    span.style.borderRadius = "6px";
+    span.style.marginRight = "10px";
+
+    const addBtn = document.createElement("button");
+    addBtn.type = "button";
+    addBtn.textContent = "Add to dictionary";
+    addBtn.addEventListener("click", () => {
+      userDictionary.add(word);
+
+      const again = findMisspellings(textInput.value, dictionary, userDictionary);
+      showResults(again);
+    });
+
+    li.appendChild(span);
+    li.appendChild(addBtn);
+    ul.appendChild(li);
+  }
+
+  resultsDiv.appendChild(message);
+  resultsDiv.appendChild(ul);
 }
