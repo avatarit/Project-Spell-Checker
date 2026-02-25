@@ -70,7 +70,12 @@ for (let i = 0; i < words.length; i++) {
     const mistakes = [];
   
     for (let i = 0; i < list.length; i++) {
-      const lower = list[i].toLowerCase();
+      const word = list[i];
+  
+      if (/^[A-Z]/.test(word)) {
+        continue;      }
+  
+      const lower = word.toLowerCase();
   
       if (!dictionary.has(lower)) {
         if (!mistakes.includes(lower)) {
