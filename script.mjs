@@ -13,6 +13,7 @@ const resultsDiv = document.getElementById("results");
 const checkBtn = document.getElementById("checkBtn");
 
 const dictionary = new Set();
+const userDictionary = new Set();
 
 for (let i = 0; i < words.length; i++) {
     const w = words[i].toLowerCase();
@@ -34,7 +35,7 @@ for (let i = 0; i < words.length; i++) {
     showResults(mistakes);
   });
   
-  // -------- Step 2 logic --------
+
   
   function stripPunctuationEdges(word) {
     return word
@@ -77,7 +78,7 @@ for (let i = 0; i < words.length; i++) {
   
       const lower = word.toLowerCase();
   
-      if (!dictionary.has(lower)) {
+      if (!dictionary.has(lower) && !userDictionary.has(lower)) {
         if (!mistakes.includes(lower)) {
           mistakes.push(lower);
         }
@@ -100,17 +101,33 @@ for (let i = 0; i < words.length; i++) {
     const ul = document.createElement("ul");
   
     for (let i = 0; i < mistakes.length; i++) {
-      const li = document.createElement("li");
-      li.textContent = mistakes[i];
-  
-      li.style.background = "yellow";
-      li.style.display = "inline-block";
-      li.style.padding = "2px 6px";
-      li.style.borderRadius = "6px";
-      li.style.margin = "4px 0";
-  
-      ul.appendChild(li);
-    }
+        const word = mistakes[i];
+      
+        const li = document.createElement("li");
+      
+        const span = document.createElement("span");
+        span.textContent = word;
+        span.style.background = "yellow";
+        span.style.display = "inline-block";
+        span.style.padding = "2px 6px";
+        span.style.borderRadius = "6px";
+        span.style.marginRight = "10px";
+      
+        const addBtn = document.createElement("button");
+        addBtn.type = "button";
+        addBtn.textContent = "Add to dictionary";
+        addBtn.addEventListener("click", () => {
+          userDictionary.add(word);
+      
+          // re-check immediately
+          const again = findMisspellings(textInput.value);
+          showResults(again);
+        });
+      
+        li.appendChild(span);
+        li.appendChild(addBtn);
+        ul.appendChild(li);
+      }
   
     resultsDiv.appendChild(message);
     resultsDiv.appendChild(ul);
