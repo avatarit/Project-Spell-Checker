@@ -36,11 +36,31 @@ for (let i = 0; i < words.length; i++) {
   
   // -------- Step 2 logic --------
   
+  function stripPunctuationEdges(word) {
+    return word
+      .replace(/^[,.?!":;]+/, "")
+      .replace(/[,.?!":;]+$/, "");
+  }
+
   function splitIntoWords(text) {
     if (!text) return [];
-    return text.split(/\s+/).filter(Boolean);
-  }
   
+    const parts = text.split(/\s+/);
+    const result = [];
+  
+    for (let i = 0; i < parts.length; i++) {
+      const raw = parts[i];
+      if (!raw) continue;
+  
+      const cleaned = stripPunctuationEdges(raw);
+      if (cleaned) result.push(cleaned);
+    }
+  
+    return result;
+  }
+
+
+
   function findMisspellings(text) {
     const list = splitIntoWords(text);
     const mistakes = [];
@@ -58,13 +78,14 @@ for (let i = 0; i < words.length; i++) {
     return mistakes;
   }
   
+  
   function showResults(mistakes) {
     resultsDiv.innerHTML = "";
   
     if (mistakes.length === 0) return;
   
     const message = document.createElement("p");
-    message.textContent = "Spelling mistakes found:";
+    message.textContent = "These words are not in Basic English:";
     message.style.fontWeight = "600";
   
     const ul = document.createElement("ul");
