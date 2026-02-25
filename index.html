@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="module" src="./script.mjs" defer></script>
     <title>Spell Checker</title>
+
+    <script type="module" src="./script.mjs" defer></script>
   </head>
+
   <body>
     <main>
       <h1>Spell Checker</h1>
@@ -16,14 +18,22 @@
       </p>
 
       <label for="textInput">Write your text:</label>
-      <textarea id="textInput" rows="6" cols="60"></textarea>
+      <br />
+
+      <textarea
+        id="textInput"
+        rows="6"
+        cols="60"
+        aria-describedby="results"
+      ></textarea>
 
       <div>
-        <button id="checkBtn" type="button">Check spelling</button>
+        <button id="checkBtn" type="button">
+          Check spelling
+        </button>
       </div>
 
       <div id="results" aria-live="polite"></div>
     </main>
-
   </body>
 </html>
