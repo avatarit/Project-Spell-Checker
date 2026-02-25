@@ -5,10 +5,83 @@
 // You can't open the index.html file using a file:// URL.
 
 import {getDictionarySize} from "./common.mjs";
-const dictionarySize = getDictionarySize();
+import words from "./words.json" with { type: "json" };
+
 const wordSize= document.getElementById("dictSize");
+const textInput = document.getElementById("textInput");
+const resultsDiv = document.getElementById("results");
+const checkBtn = document.getElementById("checkBtn");
 
-window.onload = function() {
+const dictionary = new Set();
 
-  wordSize.textContent = `${dictionarySize}`;
-}
+for (let i = 0; i < words.length; i++) {
+    const w = words[i].toLowerCase();
+    dictionary.add(w);
+  }
+  
+  window.onload = function () {
+    wordSize.textContent = getDictionarySize();
+  };
+  
+  // Clear results when user edits the text
+  textInput.addEventListener("input", () => {
+    resultsDiv.innerHTML = "";
+  });
+  
+  // Check button
+  checkBtn.addEventListener("click", () => {
+    const mistakes = findMisspellings(textInput.value);
+    showResults(mistakes);
+  });
+  
+  // -------- Step 2 logic --------
+  
+  function splitIntoWords(text) {
+    if (!text) return [];
+    return text.split(/\s+/).filter(Boolean);
+  }
+  
+  function findMisspellings(text) {
+    const list = splitIntoWords(text);
+    const mistakes = [];
+  
+    for (let i = 0; i < list.length; i++) {
+      const lower = list[i].toLowerCase();
+  
+      if (!dictionary.has(lower)) {
+        if (!mistakes.includes(lower)) {
+          mistakes.push(lower);
+        }
+      }
+    }
+  
+    return mistakes;
+  }
+  
+  function showResults(mistakes) {
+    resultsDiv.innerHTML = "";
+  
+    if (mistakes.length === 0) return;
+  
+    const message = document.createElement("p");
+    message.textContent = "Spelling mistakes found:";
+    message.style.fontWeight = "600";
+  
+    const ul = document.createElement("ul");
+  
+    for (let i = 0; i < mistakes.length; i++) {
+      const li = document.createElement("li");
+      li.textContent = mistakes[i];
+  
+      li.style.background = "yellow";
+      li.style.display = "inline-block";
+      li.style.padding = "2px 6px";
+      li.style.borderRadius = "6px";
+      li.style.margin = "4px 0";
+  
+      ul.appendChild(li);
+    }
+  
+    resultsDiv.appendChild(message);
+    resultsDiv.appendChild(ul);
+  }
