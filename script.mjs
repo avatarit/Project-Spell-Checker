@@ -44,16 +44,20 @@ for (let i = 0; i < words.length; i++) {
 
   function splitIntoWords(text) {
     if (!text) return [];
-  
-    const parts = text.split(/\s+/);
     const result = [];
+
+    const parts = text.split(/\s+/);
+    
   
-    for (let i = 0; i < parts.length; i++) {
-      const raw = parts[i];
-      if (!raw) continue;
+    for (let word of parts) {
+      const pieces = word.split("-");
   
-      const cleaned = stripPunctuationEdges(raw);
-      if (cleaned) result.push(cleaned);
+      for (let splittedWord of pieces) {
+        const cleaned = stripPunctuationEdges(splittedWord);
+        if (cleaned) {
+          result.push(cleaned);
+        }
+      }
     }
   
     return result;
